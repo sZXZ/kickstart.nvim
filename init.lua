@@ -248,7 +248,9 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
+  'Bakudankun/PICO-8.vim',
+  'justinj/vim-pico8-syntax',
+  
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -1011,6 +1013,82 @@ require('lazy').setup({
     },
   },
 })
+
+-- Configure lua_ls for Pico-8 projects only (~/Documents/pico8)
+do
+  local configs_ok, configs = pcall(require, 'lspconfig.configs')
+  if not configs_ok then
+    return
+  end
+  local util = require('lspconfig.util')
+
+  -- Project root we want this config to apply to
+  local pico_root = vim.fn.fnamemodify(vim.fn.expand('~/Documents/pico8'), ':p')
+
+  -- Ensure a lua_ls entry exists and merge our defaults into its default_config.
+  configs.lua_ls = configs.lua_ls or { default_config = {} }
+  configs.lua_ls.default_config = vim.tbl_deep_extend('force', configs.lua_ls.default_config or {}, {
+    -- Only treat ~/Documents/pico8 as the root for this setup.
+    root_dir = function(fname)
+      fname = fname and vim.fn.fnamemodify(fname, ':p') or ''
+      if pico_root ~= '' and fname:sub(1, #pico_root) == pico_root then
+        return pico_root
+      end
+      -- fall back to default root detection for other projects
+      return util.root_pattern('.git', 'lua')(fname) or util.path.dirname(fname)
+    end,
+
+    settings = {
+      Lua = {
+        runtime = {
+          version = 'LuaJIT',
+          nonstandardSymbol = {
+            '!=', '+=', '-=', '*=', '/=', '%=',
+            '^=', '|=', '&=', '<<=', '>>=', '//'
+          },
+          builtin = {
+            basic = "disable",
+            bit = "disable",
+            bit32 = "disable",
+            builtin = "disable",
+            coroutine = "disable",
+            debug = "disable",
+            ffi = "disable",
+            io = "disable",
+            jit = "disable",
+            math = "disable",
+            os = "disable",
+            package = "disable",
+            string = "disable",
+            table = "disable",
+            ["table.clear"] = "disable",
+            ["table.new"] = "disable",
+            utf8 = "disable",
+          },
+        },
+
+        workspace = {
+          checkThirdParty = false,
+          -- expose the pico8 folder as a workspace library so the language server
+          -- can resolve requires/usages inside the pico8 tree and also resolve helper
+          -- modules placed in your nvim config under lua/pico8
+          library = {
+            [pico_root] = true,
+            [vim.fn.stdpath('config') .. '/lua/pico8'] = true,
+          },
+        },
+
+        diagnostics = {
+          disable = {
+            'lowercase-global',
+            'undefined-doc-name',
+            'err-esc',
+          },
+        },
+      },
+    },
+  })
+end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
