@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -219,6 +219,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Enable lsp
+vim.lsp.enable 'pico8_ls'
+vim.lsp.enable 'lua_ls'
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -249,8 +253,7 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
   'Bakudankun/PICO-8.vim',
-  'justinj/vim-pico8-syntax',
-  
+
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -1020,10 +1023,10 @@ do
   if not configs_ok then
     return
   end
-  local util = require('lspconfig.util')
+  local util = require 'lspconfig.util'
 
   -- Project root we want this config to apply to
-  local pico_root = vim.fn.fnamemodify(vim.fn.expand('~/Documents/pico8'), ':p')
+  local pico_root = vim.fn.fnamemodify(vim.fn.expand '~/Documents/pico8', ':p')
 
   -- Ensure a lua_ls entry exists and merge our defaults into its default_config.
   configs.lua_ls = configs.lua_ls or { default_config = {} }
@@ -1043,27 +1046,37 @@ do
         runtime = {
           version = 'LuaJIT',
           nonstandardSymbol = {
-            '!=', '+=', '-=', '*=', '/=', '%=',
-            '^=', '|=', '&=', '<<=', '>>=', '//'
+            '!=',
+            '+=',
+            '-=',
+            '*=',
+            '/=',
+            '%=',
+            '^=',
+            '|=',
+            '&=',
+            '<<=',
+            '>>=',
+            '//',
           },
           builtin = {
-            basic = "disable",
-            bit = "disable",
-            bit32 = "disable",
-            builtin = "disable",
-            coroutine = "disable",
-            debug = "disable",
-            ffi = "disable",
-            io = "disable",
-            jit = "disable",
-            math = "disable",
-            os = "disable",
-            package = "disable",
-            string = "disable",
-            table = "disable",
-            ["table.clear"] = "disable",
-            ["table.new"] = "disable",
-            utf8 = "disable",
+            basic = 'disable',
+            bit = 'disable',
+            bit32 = 'disable',
+            builtin = 'disable',
+            coroutine = 'disable',
+            debug = 'disable',
+            ffi = 'disable',
+            io = 'disable',
+            jit = 'disable',
+            math = 'disable',
+            os = 'disable',
+            package = 'disable',
+            string = 'disable',
+            table = 'disable',
+            ['table.clear'] = 'disable',
+            ['table.new'] = 'disable',
+            utf8 = 'disable',
           },
         },
 
@@ -1074,7 +1087,7 @@ do
           -- modules placed in your nvim config under lua/pico8
           library = {
             [pico_root] = true,
-            [vim.fn.stdpath('config') .. '/lua/pico8'] = true,
+            [vim.fn.stdpath 'config' .. '/lua/pico8'] = true,
           },
         },
 
