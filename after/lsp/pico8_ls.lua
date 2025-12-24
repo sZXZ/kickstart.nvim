@@ -25,7 +25,7 @@ return {
     local fname = vim.api.nvim_buf_get_name(bufnr)
 
     -- Check if the file is in your PICO-8 directory
-    if fname:match 'carts/' then
+    if fname:match 'pico8/' then
       -- Look for a marker like .git or a .p8 file to find the project root
       local root = vim.fs.root(fname, { '.git', 'config.txt' })
 

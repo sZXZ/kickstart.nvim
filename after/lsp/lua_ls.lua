@@ -4,7 +4,7 @@ return {
 
     -- If we are in the PICO-8 folder, DO NOT call on_dir()
     -- This effectively "disables" lua_ls for this specific directory
-    if fname:match 'Documents/pico8' then
+    if fname:match '/pico8' then
       return
     end
 
