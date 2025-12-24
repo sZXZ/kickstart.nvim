@@ -685,20 +685,55 @@ require('lazy').setup({
         -- ts_ls = {},
         --
 
-        lua_ls = {
-          -- cmd = { ... },
-          -- filetypes = { ... },
-          -- capabilities = {},
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
-        },
+        -- lua_ls = {
+        --   -- cmd = { ... },
+        --   -- filetypes = { ... },
+        --   -- capabilities = {},
+        --   on_attach = function(client, bufnr)
+        --     -- If the file is in the PICO-8 folder, detach the client immediately
+        --     local fname = vim.api.nvim_buf_get_name(bufnr)
+        --     if fname:match '/pico8' then
+        --       vim.lsp.buf_detach_client(bufnr, client.id)
+        --       -- If it's a single-file client (no root), we might want to stop it entirely
+        --       if not client.config.root_dir then
+        --         client.stop()
+        --       end
+        --     end
+        --   end,
+        --   on_init = function(client)
+        --     local loop = vim.uv or vim.loop
+        --     local path = client.workspace_folders and client.workspace_folders[1] and client.workspace_folders[1].name
+        --     if not path then
+        --       path = client.config.root_dir
+        --     end
+        --     if not path then
+        --       return true
+        --     end
+
+        --     local function realpath(p)
+        --       return loop.fs_realpath(p) or p
+        --     end
+
+        --     local pico_root = realpath(vim.fn.expand '~/Documents/pico8')
+        --     local current_root = realpath(path)
+
+        --     -- If the current root is the pico8 folder or a subdirectory of it
+        --     if current_root and (current_root == pico_root or current_root:sub(1, #pico_root + 1) == pico_root .. '/') then
+        --       client.stop()
+        --       return false
+        --     end
+        --     return true
+        --   end,
+        --   settings = {
+        --     Lua = {
+        --       completion = {
+        --         callSnippet = 'Replace',
+        --       },
+        --       -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+        --       -- diagnostics = { disable = { 'missing-fields' } },
+        --     },
+        --   },
+        -- },
       }
 
       -- Ensure the servers and tools above are installed
