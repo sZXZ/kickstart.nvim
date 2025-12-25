@@ -518,7 +518,19 @@ require('lazy').setup({
       --
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
+      vim.filetype.add {
+        pattern = {
+          -- Match any .lua file inside a path containing 'pico8', 'carts', or 'util'
+          ['.*%.lua'] = function(path, bufnr)
+            if path:match 'pico8' or path:match 'carts' or path:match 'util' then
+              return 'pico8'
+            end
+            return 'lua'
+          end,
+          -- Also ensure .p8 files are recognized as pico8
+          ['.*%.p8'] = 'pico8',
+        },
+      }
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this

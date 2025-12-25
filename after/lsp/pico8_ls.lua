@@ -20,7 +20,7 @@
 
 return {
   cmd = { 'pico8-ls', '--stdio' },
-  filetypes = { 'p8', 'lua' },
+  filetypes = { 'p8', 'lua', 'pico8' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
 
